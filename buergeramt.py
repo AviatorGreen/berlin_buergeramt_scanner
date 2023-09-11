@@ -1,6 +1,7 @@
 import subprocess
 import importlib
 import os
+import sys
 
 # Check if pyttsx3 is already installed
 try:
@@ -94,6 +95,20 @@ def is_browser_tab_open(driver):
         # If any exception occurs, the tab is considered closed
         return False
 
+
+def print_progress_bar(iteration, total, bar_length=50):
+    progress = iteration / total
+    arrow = '=' * int(round(bar_length * progress))
+    spaces = ' ' * (bar_length - len(arrow))
+    sys.stdout.write(f'\r[{arrow}{spaces}] {int(progress * 100)}%')
+    sys.stdout.flush()
+
+def wait_with_progress_bar(backoff):
+    for i in range(backoff + 1):
+        print_progress_bar(i, backoff)
+        time.sleep(1)  # Sleep for 1 second
+    print()  # Print a newline to clear the progress bar
+
 """
 The HTML contains content of the following form:
 ```
@@ -177,7 +192,7 @@ def parse_availability():
         while is_browser_tab_open(driver):
             pass
 
-    time.sleep(backoff)
+    wait_with_progress_bar(backoff)
     backoff -= 1
     attempt += 1
 
