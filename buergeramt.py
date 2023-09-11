@@ -146,7 +146,7 @@ def get_available_dates():
             print("Error: ", e)
 
 
-backoff, attempt = 30, 0
+backoff, attempt = 90, 0
 
 
 def parse_availability():
@@ -193,8 +193,8 @@ def parse_availability():
             pass
 
     wait_with_progress_bar(backoff)
-    if backoff > 2:
-        backoff -= 1
+    if backoff > 4:
+        backoff -= 3
     attempt += 1
 
     # This is what the call on a date looks like
