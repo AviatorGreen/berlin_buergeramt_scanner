@@ -193,7 +193,8 @@ def parse_availability():
             pass
 
     wait_with_progress_bar(backoff)
-    backoff -= 1
+    if backoff > 2:
+        backoff -= 1
     attempt += 1
 
     # This is what the call on a date looks like
