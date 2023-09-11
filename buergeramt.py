@@ -186,9 +186,10 @@ def parse_availability():
 
 
 try:
+    # Create a browser instance using Firefox
+    driver = webdriver.Firefox()
+
     while True:
-        # Create a browser instance using Firefox
-        driver = webdriver.Firefox()
 
         try:
             parse_availability()
@@ -198,8 +199,11 @@ try:
             engine.say("This error might be of interest to you! Come check it out... Attempt: " + str(attempt))
             print("Retrying...")
 
-        # Close the browser tab
-        driver.quit()
+            # Close the browser tab
+            driver.quit()
+            # Create a browser instance using Firefox
+            driver = webdriver.Firefox()
+
 
 finally:
     # Close the browser tab
