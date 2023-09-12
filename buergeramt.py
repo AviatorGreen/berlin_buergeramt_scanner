@@ -75,7 +75,6 @@ os.environ["PATH"] += os.pathsep + os.path.dirname(geckodriver_path)
 
 
 
-# Define a function to check if the browser tab is open
 def is_browser_tab_open(driver):
     try:
         # Get the handles of all open tabs
@@ -84,17 +83,29 @@ def is_browser_tab_open(driver):
         # Loop through all the handles and check each tab's status
         for handle in all_handles:
             driver.switch_to.window(handle)
+
             date_elements = driver.find_elements(By.XPATH, "//td[contains(@class, 'buchbar')]/a")
             # If date_elements are found, the tab is considered open
             if date_elements:
                 return True
 
-        # If no open tabs are found, return False
+            # Check if the HTML title contains the specified text
+            if "Terminvergabe - Auswahl des Termins - Service Berlin - Berlin.de" in driver.title:
+                return True
+
+            # Check if the HTML title contains the specified text
+            if "Terminvergabe - Daten eintragen - Service Berlin - Berlin.de" in driver.title:
+                return True
+
+            # Check if the HTML title contains the specified text
+            if "Ihr Termin wurde erfolgreich gebucht!" in driver.title:
+                return True
+
+        # If no open tabs with the specified title are found, return False
         return False
     except Exception:
         # If any exception occurs, the tab is considered closed
         return False
-
 
 def print_progress_bar(iteration, total, bar_length=50):
     progress = iteration / total
@@ -146,7 +157,7 @@ def get_available_dates():
             print("Error: ", e)
 
 
-backoff, attempt = 90, 0
+backoff, attempt = 30, 0
 
 
 def parse_availability():
@@ -193,8 +204,8 @@ def parse_availability():
             pass
 
     wait_with_progress_bar(backoff)
-    if backoff > 4:
-        backoff -= 3
+    if backoff > 2 * int(backoff / 10):
+        backoff -= int(backoff / 10)
     attempt += 1
 
     # This is what the call on a date looks like
