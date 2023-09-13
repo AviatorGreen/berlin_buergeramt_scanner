@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import subprocess
 import importlib
 import os
@@ -120,6 +121,25 @@ def wait_with_progress_bar(backoff):
         time.sleep(1)  # Sleep for 1 second
     print()  # Print a newline to clear the progress bar
 
+    
+def check_before(before, date_element):
+    # Iterate through the elements and extract the dates
+    date_text = date_element.get_attribute("aria-label").strip()
+    date_title = date_element.get_attribute("title")
+        
+    # Extract the date from the title in the format "dd.mm.yyyy"
+    date_parts = date_title.split(" - ")[0].split(".")
+    date_str = f"{date_parts[0]}.{date_parts[1]}.{date_parts[2]}"
+                
+    # Convert the date string to a datetime object for comparison
+    date_obj = datetime.strptime(date_str, "%d.%m.%Y")
+    before_date_obj = datetime.strptime(before, "%d.%m.%Y")
+        
+    # Check if the date is earlier than the 'before' date
+    if date_obj < before_date_obj:
+        return True
+    return False
+
 """
 The HTML contains content of the following form:
 ```
@@ -148,7 +168,9 @@ def get_available_dates():
             # Iterate through the elements and extract the dates
             for date_element in date_elements:
                 date_text = date_element.get_attribute("aria-label").strip()
-                available_dates.append(date_text)
+
+                if check_before(datetime.now() + timedelta(days=7), date_element):
+                    available_dates.append(date_text)
 
             return available_dates
         except AttributeError as e:
