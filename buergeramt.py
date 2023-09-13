@@ -84,10 +84,10 @@ def is_browser_tab_open(driver):
         for handle in all_handles:
             driver.switch_to.window(handle)
 
-            date_elements = driver.find_elements(By.XPATH, "//td[contains(@class, 'buchbar')]/a")
+            # date_elements = driver.find_elements(By.XPATH, "//td[contains(@class, 'buchbar')]/a")
             # If date_elements are found, the tab is considered open
-            if date_elements:
-                return True
+            # if date_elements:
+            #     return True
 
             # Check if the HTML title contains the specified text
             if "Terminvergabe - Auswahl des Termins - Service Berlin - Berlin.de" in driver.title:
